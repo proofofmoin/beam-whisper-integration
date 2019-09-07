@@ -11,20 +11,27 @@ const TTL = 20;
 const POW_TARGET = 2;
 
 (async () => {
-    // TODO: Web3 connection
+    // Web3 connection
+    const web3 = new Web3();
+    try {
+        web3.setProvider(new Web3.providers.WebsocketProvider("ws://localhost:8546", {headers: {Origin: "mychat"}}));
+        await web3.eth.net.isListening();
+    } catch(err) {
+        process.exit();
+    }
 
     const ui = new UI();
     
-    // TODO: Generate keypair
-    const keyPair = ""; 
+    // Generate keypair
+    const keyPair = await web3.shh.newKeyPair();
 
-    // TODO: Obtain public key
-    const pubKey = "";
+    // Obtain public key
+    const pubKey = await web3.shh.getPublicKey(keyPair);
 
     ui.setUserPublicKey(pubKey);
     
-    // TODO: Generate a symmetric key
-    const channelSymKey = ""; 
+    // Generate a symmetric key
+    const channelSymKey = await web3.shh.generateSymKeyFromPassword(DEFAULT_CHANNEL);
 
     const channelTopic = DEFAULT_TOPIC;
 
@@ -42,8 +49,16 @@ const POW_TARGET = 2;
                     ui.addMessage(pubKey, messageContent, true);
                 }
             } else {
-                // TODO: Send a public message
-               
+                // Send a public message
+                web3.shh.post({
+                    symKeyID: channelSymKey,
+                    sig: keyPair,
+                    ttl: TTL,
+                    topic: channelTopic,
+                    payload: web3.utils.fromAscii(message),
+                    powTime: POW_TIME,
+                    powTarget: POW_TARGET
+                });               
             }
         } catch(err) {
             console.log(err);
@@ -51,7 +66,17 @@ const POW_TARGET = 2;
         }
     });
 
-    // TODO: Subscribe to public chat messages
+    // Subscribe to public chat messages
+    web3.shh.subscribe("messages", {
+        minPow: POW_TARGET,
+        symKeyID: channelSymKey,
+        topics: [channelTopic]
+    }).on('data', (data) => {
+        // Display message in the UI
+        ui.addMessage(data.sig, web3.utils.toAscii(data.payload));
+    }).on('error', (err) => {
+        ui.addError("Couldn't decode message: " + err.message);
+    });
 
     // TODO: Subscribe to private messages
    
