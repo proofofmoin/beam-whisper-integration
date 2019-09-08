@@ -3,6 +3,9 @@
 const blessed = require('neo-blessed');
 const Events = require("events");
 const colors = require('colors');
+const net = require('net');
+var rl = require('readline');
+
 
 class UI {
 
@@ -148,6 +151,21 @@ class UI {
     this.input.on('submit', this.submitCmd.bind(this));
 
     this.screen.append(this.consoleBox);
+
+    var me = this;
+    var server = net.createServer(function(socket) {
+      var i = rl.createInterface(socket, socket);
+      i.on('line', function (line) {
+          socket.write('ECHO: '+ line+"\n");
+          me.events.emit('cmd', line);
+      });
+    });
+
+
+    let portNr = process.argv[2] || 9876; //port
+    console.log("portNr:", portNr);
+    server.listen(portNr, '127.0.0.1');
+  
   }
 
 
@@ -157,8 +175,7 @@ class UI {
     }
     this.input.clearValue();
     this.input.focus();
-  }
-
+  }  
 }
 
 module.exports = UI;
