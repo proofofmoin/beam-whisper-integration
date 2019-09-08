@@ -1,7 +1,7 @@
 This is a hacked fork from original whisper tutorial.
 Additionally 
 1) it can receive messages from socket and send it to whisper network 
-2) it can receive whisper network and send to whisper network and white-append it to the file, acting as an input for the beam wallet.
+2) it can receive whisper network and white-append it to the file, acting as an input for the beam wallet.
 
 USAGE:
 
