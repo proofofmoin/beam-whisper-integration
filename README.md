@@ -1,3 +1,19 @@
+This is a hacked fork from original whisper tutorial.
+Additionally 
+1) it can receive messages from socket and send it to whisper network 
+2) it can receive whisper network and send to whisper network and white-append it to the file, acting as an input for the beam wallet.
+
+USAGE:
+
+`npm start <walletSuffix> <Port>`
+where:
+
+`walletSuffix` - a discriminating suffix as a part of the output file name for messages out
+`port` - localhost port to receiveng messages on. 
+
+
+==ORIGINAL README below===========
+
 Getting started with Whisper
 ===
 
