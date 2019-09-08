@@ -4,8 +4,9 @@ const blessed = require('neo-blessed');
 const Events = require("events");
 const colors = require('colors');
 const net = require('net');
-var rl = require('readline');
+const fs = require('fs');
 
+var rl = require('readline');
 
 class UI {
 
@@ -156,18 +157,22 @@ class UI {
     var server = net.createServer(function(socket) {
       var i = rl.createInterface(socket, socket);
       i.on('line', function (line) {
-          socket.write('ECHO: '+ line+"\n");
-          me.events.emit('cmd', line);
+          //socket.write('ECHO: '+ line+"\n");
+          if (line.indexOf("SendMsg")>=0) { 
+            me.events.emit('cmd', line);
+            fs.appendFile("messages.log", line + '\r\n', function (err) {
+                if (err) return console.log(err);
+            });        
+          }
       });
     });
 
 
-    let portNr = process.argv[2] || 9876; //port
+    let portNr = process.argv[3]; //port
     console.log("portNr:", portNr);
     server.listen(portNr, '127.0.0.1');
   
   }
-
 
   submitCmd(cmd) {
     if (cmd !== '') {

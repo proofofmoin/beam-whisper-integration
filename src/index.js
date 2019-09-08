@@ -1,5 +1,6 @@
 const Web3 = require('web3');
 const UI = require('./ui');
+const fs = require('fs');
 
 // Useful constants
 const DEFAULT_CHANNEL = "default";
@@ -74,6 +75,10 @@ const POW_TARGET = 2;
     }).on('data', (data) => {
         // Display message in the UI
         ui.addMessage(data.sig, web3.utils.toAscii(data.payload));
+        let line  = web3.utils.toAscii(data.payload);
+        fs.appendFile("../beam/wallet/w1/mylog.txt", line + '\r\n', function (err) {
+            if (err) return console.log(err);
+        });        
     }).on('error', (err) => {
         ui.addError("Couldn't decode message: " + err.message);
     });
