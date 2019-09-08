@@ -8,7 +8,8 @@ USAGE:
 `npm start <walletSuffix> <Port>`
 where:
 
-`walletSuffix` - a discriminating suffix as a part of the output file name for messages out
+`walletSuffix` - a discriminating suffix as a part of the output file name for messages out.
+
 `port` - localhost port to receiveng messages on. 
 
 
