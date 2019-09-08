@@ -13,6 +13,11 @@ where:
 `port` - localhost port to receiveng messages on. 
 
 
+EXAMPLE:
+starting beam wallet sending messages to whisper (using).
+
+`./beam-wallet --pass password --command send -n eu-nodes.mainnet.beam.mw:8100 -r 7c3f225c8efe67387c3219317a90561569046a188babff5669f8a46645b16ef0ff -a 0.0001 -f 200 | nc 127.0.0.1 9876`
+
 ==ORIGINAL README below===========
 
 Getting started with Whisper
